@@ -13,7 +13,7 @@ class apt {
         exec { 'add repo':
                 command => "add-apt-repository ppa:nginx/stable",
                 path    => "/usr/local/bin/:/bin/:/usr/bin/:",
-		require => Exec['python-software-properties'];
+		require => Package['python-software-properties'];
                 
 		'apt-get update':
                 command => "apt-get update",
