@@ -8,6 +8,7 @@ class php5 {
 
                 $php_packagelist:
                 ensure => latest,
+		notify => Service["php5-fpm"],
                 require => Package[php5-fpm];
         }
 
@@ -17,8 +18,7 @@ class php5 {
                 mode    => 644,
                 ensure  => present,
                 content  => template("php5/www.conf.erb"),
-		notify => Service["php5-fpm"],
-                require => Package["php5-fpm", "$php_packagelist"];
+                require => Package["php5-fpm"];
         }
 
 service { "php5-fpm":
