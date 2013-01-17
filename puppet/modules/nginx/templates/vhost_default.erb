@@ -1,0 +1,55 @@
+server {
+        listen          80 default_server;
+        server_name     _;
+
+        access_log      <%= log_directory %>/access.log;
+        error_log       <%= log_directory %>/error.log;
+
+        root            <%= document_root %>;
+        index           index.php index.html;
+
+    	location / {
+        index index.php;
+        try_files $uri $uri/ @handler;
+    	}
+
+## These locations would be hidden by .htaccess normally
+	location ^~ /app/{ deny all; }
+	location ^~ /includes/   { deny all; }
+	location ^~ /lib/{ deny all; }
+	location ^~ /media/downloadable/ { deny all; }
+	location ^~ /pkginfo/{ deny all; }
+	location ^~ /report/config.xml   { deny all; }
+	location ^~ /var/{ deny all; }
+	server_tokens off;
+
+	location  /. {
+	return 404;
+	}
+
+	location @handler {
+	rewrite / /index.php;
+	}
+	rewrite ^/minify/([0-9]+)(/.*.(js|css))$ /lib/minify/m.php?f=$2&d=$1 last;
+	rewrite ^/skin/m/([0-9]+)(/.*.(js|css))$ /lib/minify/m.php?f=$2&d=$1 last;
+	location /lib/minify/ { allow all; }
+
+	location ~ .php$ {
+	if (!-e $request_filename) { rewrite / /index.php last; }
+
+	expires        off;
+	fastcgi_pass   php_fpm;
+	fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+	fastcgi_param  MAGE_RUN_CODE default;
+	fastcgi_param  MAGE_RUN_TYPE store;
+	include        fastcgi_params;
+	fastcgi_param  SERVER_PORT 80;
+	fastcgi_read_timeout 600s;
+	port_in_redirect off;
+	}
+
+        location ~ /\.ht {
+                deny all;
+        }
+}
+
