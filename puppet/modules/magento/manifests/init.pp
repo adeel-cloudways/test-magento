@@ -20,7 +20,8 @@ class magento inherits params{
     cwd => "/tmp",
     command => "wget http://www.magentocommerce.com/downloads/assets/1.7.0.2/magento-1.7.0.2.tar.gz",
     path    => "/usr/local/bin/:/bin/:/usr/bin/:",
-    creates => "/tmp/magento-1.7.0.2.tar.gz";
+    creates => "/tmp/magento-1.7.0.2.tar.gz",
+    require =>  Exec["reload-nginx"];
   }
 
   exec { 
@@ -32,13 +33,13 @@ class magento inherits params{
 
     "setting-dir-permissions":
     cwd => "$document_root",
-    command => "find . -type d  -exec chmod 755 {} '\\;'",
+    command => "find . -type d  -exec chmod 755 {} \\;",
     path    => "/usr/local/bin/:/bin/:/usr/bin/:",
     require => Exec["untar-magento"];
 
     "setting-file-permissions":
     cwd => "$document_root",
-    command => "find . -type f  -exec chmod 644 {} '\\;'",
+    command => "find . -type f  -exec chmod 644 {} \\;",
     path    => "/usr/local/bin/:/bin/:/usr/bin/:",
     require => Exec["untar-magento"];
 
