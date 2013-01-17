@@ -4,7 +4,7 @@ group { "puppet":
 
 class { "nginx":
     document_root => "/var/www/web/",
-    www_directory => "www_directory",
+    www_directory => "/var/www/",
     log_directory => "/var/www/logs/"
 
 }
