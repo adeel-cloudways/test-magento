@@ -22,5 +22,5 @@ include apt
 include params
 #include mysql
 include nginx
-#include php5
-#include magento
+include php5
+include magento
