@@ -24,13 +24,15 @@ file {
       	ensure => 'directory',
         mode    => 0755,
         owner   => www-data,
-        group   => www-data;
+        group   => www-data,
+	create_parents => true;
 	
 	"${document_root}":
 	ensure => 'directory',
         mode    => 0755,
         owner   => www-data,
         group   => www-data,
+	create_parents => true;
    }
 
    service { "nginx":
