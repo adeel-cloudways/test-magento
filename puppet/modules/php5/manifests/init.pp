@@ -17,7 +17,8 @@ class php5 {
                 mode    => 644,
                 ensure  => present,
                 content  => template("php5/www.conf.erb"),
-                require => Package[php5-fpm];
+		notify => Service["php5-fpm"],
+                require => Package["php5-fpm", "$php_packagelist"];
         }
 
 service { "php5-fpm":
