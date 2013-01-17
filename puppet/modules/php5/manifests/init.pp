@@ -1,5 +1,5 @@
 class php5 {
-        $php_packagelist = [ "php5-mysql", "php5-gd", "php5-curl", "php5-apc", "php5-dev", "php-pear", "php5-imagick", "php5-memcache", "make" ]
+        $php_packagelist = [ "php5-mysql", "php5-gd", "php5-curl", "php-apc", "php5-dev", "php-pear", "php5-imagick", "php5-memcache", "make" ]
         $phpfpm_conf = "/etc/php5/fpm/pool.d/www.conf"
 
         package {'php5-fpm':
