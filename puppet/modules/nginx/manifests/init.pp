@@ -1,15 +1,13 @@
 #
-class nginx( $document_root, $log_directory ) {
+class nginx( $document_root, $log_directory, $www_directory ) {
 
 $nginx_default_vhost = "/etc/nginx/sites-enabled/default"
+$magento_dirs=[ "${www_directory}", "${log_directory}"]
 
    package { "nginx":
        ensure => "latest"
    }
 
-#   file { "/etc/nginx/sites-available/default":
-#       	content => template("nginx/vhost_default.erb"),
-#	require => Package["nginx"];
 file {
 	"/etc/nginx/conf.d/php_fpm.conf":
 	 content => template("nginx/php_fpm.erb"),
@@ -17,23 +15,36 @@ file {
 
         $nginx_default_vhost:
         ensure => absent;
+
+        "${www_directory}":
+        ensure => 'directory',
+        mode    => 0755,
+        owner   => www-data,
+        group   => www-data,
    }
 
-   file { 
-	"${log_directory}":
-      	ensure => 'directory',
+file {
+	"${magento_dirs}":
+	require => File["${www_directory}"],
+        ensure => 'directory',
         mode    => 0755,
         owner   => www-data,
         group   => www-data,
-	create_parents => true;
+}
+
+#   file { 
+#	"${log_directory}":
+#      	ensure => 'directory',
+#        mode    => 0755,
+#        owner   => www-data,
+#        group   => www-data,
 	
-	"${document_root}":
-	ensure => 'directory',
-        mode    => 0755,
-        owner   => www-data,
-        group   => www-data,
-	create_parents => true;
-   }
+#	"${document_root}":
+#	ensure => 'directory',
+#        mode    => 0755,
+#        owner   => www-data,
+#        group   => www-data;
+#   }
 
    service { "nginx":
       ensure => running,
